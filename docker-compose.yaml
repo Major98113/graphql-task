@@ -5,5 +5,6 @@ services:
       context: ./github-service
     environment:
       APP_PORT: 8080
+      ALL_REPOS_LIST_URL: https://api.github.com/users/Major98113/repos
     ports:
       - '8080:8080'
