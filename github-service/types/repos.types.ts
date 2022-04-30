@@ -1,4 +1,4 @@
-import { GraphQLObjectType, GraphQLInt, GraphQLString } from 'graphql';
+import { GraphQLObjectType, GraphQLInt, GraphQLString, GraphQLBoolean, GraphQLScalarType } from 'graphql';
 
 export type Owner = {
   login: string,
@@ -25,9 +25,47 @@ export type Repo = {
   name: string;
   size: number;
   owner: Owner;
+  private?: boolean;
+};
+
+export type FileTree = {
+  path: string,
+  mode: string,
+  type: string,
+  sha: string,
+  size: number,
+  url: string,
+};
+
+export type FileContent = {
+  name: string,
+  path: string,
+  sha: string,
+  size: number,
+  url: string,
+  html_url: string,
+  git_url: string,
+  download_url: string,
+  type: string,
+  content: string,
+  encoding: string,
+  _links: {
+    self: string,
+    git: string,
+    html: string,
+  }
 };
 
 export type GetReposResponse = Repo[];
+export type GetMainRepoInfoResponse = Repo;
+export type GetRepoHooksResponse = any;
+export type GetRepoFileContentResponse = FileContent;
+export type GetRepoFilesResponse = {
+  sha: string,
+  url: string,
+  truncated: boolean,
+  tree: FileTree[],
+}
 
 const RepoOwnerType = new GraphQLObjectType({
   name: "RepoOwnerType",
@@ -53,7 +91,7 @@ const RepoOwnerType = new GraphQLObjectType({
   }),
 });
 
-const RepoType = new GraphQLObjectType({
+export const RepoType = new GraphQLObjectType({
   name: "ReposType",
   fields: () => ({
     size: { type: GraphQLInt },
@@ -62,4 +100,14 @@ const RepoType = new GraphQLObjectType({
   }),
 });
 
-module.exports = RepoType;
+export const RepoDetailsType = new GraphQLObjectType({
+  name: "RepoDetailsType",
+  fields: () => ({
+    size: { type: GraphQLInt },
+    name: { type: GraphQLString },
+    owner: { type: RepoOwnerType },
+    private: { type: GraphQLBoolean },
+    files: { type: GraphQLInt },
+    content: { type: GraphQLString },
+  }),
+});
