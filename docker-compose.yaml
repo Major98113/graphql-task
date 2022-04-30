@@ -6,6 +6,6 @@ services:
     environment:
       APP_PORT: 8080
       GITHUB_DOMAIN: https://api.github.com
-      GITHUB_USER: Major98113
+      GITHUB_USER: roma8389
     ports:
       - '8080:8080'
