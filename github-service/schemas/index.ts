@@ -1,26 +1,32 @@
+import 'reflect-metadata';
 import { GraphQLObjectType, GraphQLSchema, GraphQLList, GraphQLString } from 'graphql';
+import { serviceContainer } from '../config/inversify.config';
+import { LoggerInterface, Logger } from '../types/logger.types';
+import { ReposService } from '../services/repos.service';
 const ReposType = require('../types/repos.types');
 
+const reposServiceInstance = new ReposService();
+const logger = serviceContainer.get<LoggerInterface>( Logger );
 const RootQuery = new GraphQLObjectType({
   name: "RootQueryType",
   fields: {
     getAllRepos: {
       type: new GraphQLList(ReposType),
       args: {},
-      resolve(_parent, _args) {
-        return [];
+      async resolve(_parent, _args) {
+        logger.logServiceRequest('RootQuery getAllRepos request started');
+        const repos = await reposServiceInstance.getAllRepos();
+        logger.logServiceRequest(`RootQuery getAllRepos repos: ${JSON.stringify(repos)}`);
+        return repos;
       },
     },
     getRepoById: {
         type: new GraphQLList(ReposType),
         args: { id: { type: GraphQLString } },
-        resolve(_parent, _args) {
-            console.log('-----------------------------------');
-        console.log(`_args: ${JSON.stringify(_args)}`);
-        console.log('-----------------------------------');
-          return {
-              'id': '111'
-          };
+        async resolve(_parent, args) {
+          const { id } = args;
+          const desiredRepo = await reposServiceInstance.getRepoById(id);
+          return desiredRepo;
         },
       },
   },
