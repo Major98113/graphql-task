@@ -1,5 +1,4 @@
 import http from 'http';
-import { config } from 'dotenv';
 
 import { serviceContainer } from './config/inversify.config';
 import { LoggerInterface, Logger } from "./types/logger.types";
@@ -8,13 +7,11 @@ import app from './routers';
 (async function main() {
     try {
         const loggerInstance = serviceContainer.get<LoggerInterface>(Logger);
-
-        // @ts-ignore
-        const { APP_PORT } = config().parsed;
+        const { APP_PORT } = process.env;
         const server = http.createServer(app);
 
-        server.listen(APP_PORT, function () {
-            console.info(`Server is running on ${APP_PORT} port!`);
+        server.listen(APP_PORT || 8080, function () {
+            console.info(`Server is running on ${APP_PORT || 8080} port!`);
 
             process.on('uncaughtException', function ( err: Error ) {
                 loggerInstance.logError(
