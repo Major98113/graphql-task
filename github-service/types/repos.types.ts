@@ -26,6 +26,7 @@ export type Repo = {
   size: number;
   owner: Owner;
   private?: boolean;
+  hooks_url?: string;
 };
 
 export type FileTree = {
@@ -109,5 +110,6 @@ export const RepoDetailsType = new GraphQLObjectType({
     private: { type: GraphQLBoolean },
     files: { type: GraphQLInt },
     content: { type: GraphQLString },
+    hooks_url: { type: GraphQLString },
   }),
 });

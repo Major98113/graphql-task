@@ -52,8 +52,8 @@ class ReposService {
                 `);
                 return;
             }
-            const { name, size, owner, private: isPrivate } = data;
-            return { name, size, owner, private: isPrivate, };
+            const { name, size, owner, private: isPrivate, hooks_url, } = data;
+            return { name, size, owner, private: isPrivate, hooks_url, };
         } catch (error) {
             this.logger.logError(`getMainRepoInfo Error: ${error}`);
             return; 
@@ -157,7 +157,6 @@ class ReposService {
         const [
             mainRepoInfo,
             files,
-            hooks,
             content,
         ] = await Promise.all([
             this.getMainRepoInfo(repoId),
@@ -168,7 +167,6 @@ class ReposService {
         return {
             ...mainRepoInfo,
             files,
-            hooks,
             content,
         };
     }
