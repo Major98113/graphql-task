@@ -85,8 +85,18 @@ class ReposService {
     @log
     private async getRepoContentFile( repoId: string ): Promise<FileContent | undefined> {
         try {
+            const { data: { tree } } = await axios.get<GetRepoFilesResponse>(
+                `${this.REPO_MAIN_DETAILS}/${repoId}/git/trees/main?recursive=1`,
+                { headers: { Accept: 'application/json' }},
+            );
+            this.logger.logServiceRequest(`getRepoContentFile tree is ready`);
+            const desiredYamlFile = tree.find(({path}) => Boolean(path.match(/.yaml/i)?.length));
+            this.logger.logServiceRequest(`getRepoContentFile desired YamlFile: ${JSON.stringify(desiredYamlFile)}`);
+            if (!desiredYamlFile) {
+                return;
+            }
             const { data, status } = await axios.get<GetRepoFileContentResponse>(
-                `${this.REPO_MAIN_DETAILS}/${repoId}/contents/docker-compose.yaml`,
+                `${this.REPO_MAIN_DETAILS}/${repoId}/contents/${desiredYamlFile.path}`,
                 { headers: { Accept: 'application/json' }},
             );
             this.logger.logServiceRequest(`getRepoContentFile status: ${status}`);
