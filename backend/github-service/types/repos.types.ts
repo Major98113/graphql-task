@@ -59,7 +59,6 @@ export type FileContent = {
 
 export type GetReposResponse = Repo[];
 export type GetMainRepoInfoResponse = Repo;
-export type GetRepoHooksResponse = any;
 export type GetRepoFileContentResponse = FileContent;
 export type GetRepoFilesResponse = {
   sha: string,
