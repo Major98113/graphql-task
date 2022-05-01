@@ -10,7 +10,6 @@ import {
     GetReposResponse,
     GetMainRepoInfoResponse,
     GetRepoFilesResponse,
-    GetRepoHooksResponse,
     GetRepoFileContentResponse,
     Repo,
     FileContent,
@@ -84,29 +83,6 @@ class ReposService {
     }
 
     @log
-    private async getRepoHooks( repoId: string ): Promise<any> {
-        try {
-            const { data, status } = await axios.get<GetRepoHooksResponse>(
-                `${this.REPO_MAIN_DETAILS}/${repoId}/hooks`,
-                { headers: { Accept: 'application/json' }},
-            );
-            this.logger.logServiceRequest(`getRepoHooks status: ${status}`);
-            if (status !== StatusCodes.OK) {
-                this.logger.logError(`
-                    getRepoHooks: reuqest finished with next params:
-                        status: ${status}
-                        data: ${JSON.stringify(data)}
-                `);
-                return {};
-            }
-            return data;   
-        } catch (error) {
-            this.logger.logError(`getRepoHooks Error: ${error}`);
-            return {};
-        }
-    }
-
-    @log
     private async getRepoContentFile( repoId: string ): Promise<FileContent | undefined> {
         try {
             const { data, status } = await axios.get<GetRepoFileContentResponse>(
@@ -161,7 +137,6 @@ class ReposService {
         ] = await Promise.all([
             this.getMainRepoInfo(repoId),
             this.getRepoNumberOfFiles(repoId),
-            this.getRepoHooks(repoId),
             this.getRepoContentFile(repoId),
         ]);
         return {
