@@ -25,8 +25,8 @@ class ReposService {
 
     constructor() {
         const {
-            GITHUB_DOMAIN = 'https://api.github.com',
-            GITHUB_USER = 'Major98113',
+            GITHUB_DOMAIN,
+            GITHUB_USER,
         } = process.env;
         if (!GITHUB_DOMAIN || !GITHUB_USER) {
             throw new Error('env params are not defined');
