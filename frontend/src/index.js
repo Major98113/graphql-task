@@ -1,7 +1,9 @@
 import * as React from 'react';
 import ReactDOM from 'react-dom';
 import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client';
-import App from './App';
+import {BrowserRouter as Router, Route} from 'react-router-dom'
+import ReposList from './components/ReposList';
+import RepoDetails from './components/RepoDetails';
 
 const client = new ApolloClient({
   uri: 'http://localhost:8080/graphql',
@@ -10,7 +12,12 @@ const client = new ApolloClient({
 
 ReactDOM.render(
   <ApolloProvider client={client}>
-    <App/>  
+    <Router>
+      <div>
+        <Route exact path='/' component={ReposList} />
+        <Route path='/repos/:id' component={RepoDetails} />
+      </div>
+    </Router>
   </ApolloProvider>,
   document.getElementById('root'),
 );
